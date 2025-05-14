@@ -18,6 +18,13 @@ After - max_active_tasks is new
 Before - from airflow.models import Variable
 After - from airflow.sdk import Variable
 
+## Screen Shots 
+
+
+![Airflow UI](src/images/airflow-ui.png)
+
+![Airflow Dag](src/images/airflow_dag.png)
+
 ### Configure ElasticSearch on Airflow 
 
 curl -X GET "http://0.0.0.0:9200/airflow/_mapping?pretty"
