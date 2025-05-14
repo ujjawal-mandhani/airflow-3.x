@@ -1,0 +1,8 @@
+mnt/dags/utils
+mnt/dags/baxa*
+mnt/dags/chl*
+mnt/dags/__pycache__
+mnt/dags/reconcilliation_config.json
+backup_script.py
+entrypoint.sh
+postgres
