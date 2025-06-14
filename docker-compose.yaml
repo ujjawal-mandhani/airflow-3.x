@@ -113,6 +113,7 @@ services:
       AIRFLOW__WEBSERVER__WEB_SERVER_HOST: airflow-cont
       AIRFLOW__LOGGING__WORKER_LOG_SERVER_HOST: celery-worker-1
       AIRFLOW__CORE__EXECUTION_API_SERVER_URL: 'http://airflow-cont:8080/execution/'
+      AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
       # AIRFLOW__CORE__FERNET_KEY: ZnAVSIyFSgCKnr4lrpA5crFKY_yktX5bCa3_F7ZnEdI=
       # AIRFLOW__ELASTICSEARCH__HOST: elasticsearch-cont:9200
       # AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID: elasticsearch_default
