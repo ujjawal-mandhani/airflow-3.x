@@ -1,5 +1,5 @@
 FROM apache/airflow:latest
-RUN pip install apache-airflow[elasticsearch] psycopg2-binary apache-airflow-providers-apache-spark apache-airflow-providers-oracle apache-airflow-providers-smtp apache-airflow-providers-amazon pandas
+RUN pip install apache-airflow[elasticsearch] psycopg2-binary apache-airflow-providers-apache-spark apache-airflow-providers-oracle apache-airflow-providers-smtp apache-airflow-providers-amazon pandas apache-airflow-providers-apache-spark
 USER root 
 ENV SPARK_HOME=/usr/local/share/spark
 RUN SPARK_VERSION=$(curl -s https://downloads.apache.org/spark/ | grep -o 'spark-[0-9.]\+/' | sed 's#/##' | sort -V | tail -n 1) && \

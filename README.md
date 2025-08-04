@@ -70,3 +70,17 @@ base_log_folder = /opt/airflow/logs
 remote_logging = True
 
 remote_base_log_folder = http://elasticsearch-cont:9200/airflow
+
+#### In order to access hdfs from airflow 
+
+
+```bash
+hdfs dfs -mkdir -p /user/airflow
+hdfs dfs -chown airflow:supergroup /user/airflow
+```
+
+#### Run backfill in Airflow Using cli 
+
+```bash
+airflow backfill create --dag-id spark_submit_example --from-date 2025-07-26T15:30:00 --to-date 2025-07-26T16:30:00
+```
