@@ -1,0 +1,28 @@
+airflow_dbt_spark:
+  target: thrift
+  outputs:
+    livy:
+      type: spark
+      method: session
+      schema: default
+      threads: 4
+      host: namenode
+      spark_submit_bin: spark-submit
+      connection_parameters:
+        master: yarn
+        deploy-mode: cluster
+      session_properties:
+        spark.yarn.appMasterEnv.PYSPARK_PYTHON: python3
+        spark.executorEnv.PYSPARK_PYTHON: python3
+        spark.sql.warehouse.dir: hdfs://namenode:8020/user/hive/warehouse
+        spark.yarn.dist.files: hdfs://namenode:8020/user/spark/jars/pyspark.zip,hdfs://namenode:8020/user/spark/jars/py4j-0.10.9.9-src.zip
+    thrift-server:
+      type: spark
+      method: thrift        # ← tells dbt to use JDBC/Thrift
+      host: spark-master    # hostname or IP of the ThriftServer container
+      port: 10000           # default Thrift port (change if you used another)
+      user: root            # any string is fine; usually hive
+      schema: default       # Hive database / schema name
+      threads: 4            # concurrent SQL sessions (≤ Thrift max)
+      session_properties:
+        spark.sql.warehouse.dir: hdfs://namenode:8020/user/airflow/dbt_output
