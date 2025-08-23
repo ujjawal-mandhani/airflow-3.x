@@ -3,19 +3,25 @@
     Welcome to your first dbt model!
     Did you know that you can also configure models directly within SQL files?
     This will override configurations stated in dbt_project.yml
-
+    materialized='table',
     Try changing "table" to "view" below
+    'hoodie.keep.min.commits': '1',
+    'hoodie.keep.max.commits': '1',
+    'hoodie.cleaner.policy': 'KEEP_LATEST_COMMITS'
 */
 
 {{ config(
-    materialized='table',
+    materialized='incremental',
     file_format='hudi',
     unique_key='id',
     options={
       'type': 'COPY_ON_WRITE',
       'primaryKey': 'id',
-      'preCombineField': 'updated_at'
-    }
+      'preCombineField': 'updated_at',
+      'hoodie.parquet.compression.codec': 'snappy',
+      'parquet.compression': 'SNAPPY'
+    },
+    tags=["hudi"]
 ) }}
 
 with source_data as (

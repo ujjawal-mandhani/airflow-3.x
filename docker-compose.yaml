@@ -63,6 +63,7 @@ services:
       - ./mnt/.dbt/:/home/airflow/.dbt/
       - ./mnt/ssh/id_rsa:/home/airflow/.ssh/id_rsa
       - ./mnt/ssh/id_rsa.pub:/home/airflow/.ssh/id_rsa.pub
+      - ./logs/airflow/logs:/opt/airflow/logs
       # - /home/ujjawalmandhani/Desktop/MyPassport/home/ujjawal/Desktop/postgred_db/torrent:/home/torrents/html
     ports:
       - 9057:8080
@@ -96,6 +97,7 @@ services:
   celery-worker-1:
     build: ./airflow/
     hostname: celery-worker-1
+    container_name: celery-worker-1
     depends_on:
       - airflow-cont
       - redis
@@ -103,6 +105,9 @@ services:
     command: bash -c "airflow db migrate && airflow celery worker"
     # command: bash -c "airflow db migrate && celery --app airflow.providers.celery.executors.celery_executor worker --hostname celery-worker-1@%h"
     # command: tail -f /dev/null
+    devices:
+      - "/dev/snd:/dev/snd"
+      - "/dev/dri:/dev/dri"
     entrypoint: ''
     volumes: 
       - /home/ujjawalmandhani/.aws:/home/.aws:ro
@@ -115,11 +120,14 @@ services:
       - /home/ujjawalmandhani/.Xauthority:/root/.Xauthority
       # - /home/ujjawalmandhani/Desktop/MyPassport/home/ujjawal/Desktop/postgred_db/torrent:
       - ./staticfiles:/opt/airflow/torrent/html/
-      - /run/user/1000/pulse/native:/run/user/1000/pulse/native  
+      # - /run/user/1000/pulse/native:/run/user/1000/pulse/native  
       - ./mnt/airflow-dbt-spark:/opt/airflow/airflow-dbt-spark
       - ./mnt/.dbt/:/home/airflow/.dbt/
       - ./mnt/ssh/id_rsa:/home/airflow/.ssh/id_rsa
       - ./mnt/ssh/id_rsa.pub:/home/airflow/.ssh/id_rsa.pub
+      - /run/user/1000/pulse:/run/user/1000/pulse
+      - ./celery/data/firefox/:/root/.mozilla/firefox/
+      - ./logs/celery-worker/logs:/opt/airflow/logs
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -144,6 +152,7 @@ services:
       AIRFLOW__CORE__EXECUTION_API_SERVER_URL: 'http://airflow-cont:8080/execution/'
       AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
       HADOOP_CONF_DIR: '/opt/hadoop/etc/hadoop'
+      PULSE_SERVER: unix:/run/user/1000/pulse/native
       # AIRFLOW__CORE__FERNET_KEY: ZnAVSIyFSgCKnr4lrpA5crFKY_yktX5bCa3_F7ZnEdI=
       # AIRFLOW__ELASTICSEARCH__HOST: elasticsearch-cont:9200
       # AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID: elasticsearch_default
@@ -154,6 +163,8 @@ services:
       # AIRFLOW__ELASTICSEARCH__ENDPOINT: http://elasticsearch-cont:9200
       # AIRFLOW__ELASTICSEARCH__INDEX_NAME: airflow
       # AIRFLOW__ELASTICSEARCH__JSON_FORMAT: 'true'
+    group_add:
+      - audio
     networks:
       - my_shared_network
   postgres:

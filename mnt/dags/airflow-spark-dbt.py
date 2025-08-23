@@ -34,7 +34,7 @@ with DAG(
         task_id="dbt_run",
         bash_command=(
             "cd /opt/airflow/airflow-dbt-spark/airflow_dbt_spark && "
-            "dbt run --profiles-dir /home/airflow/.dbt --target thrift-server"
+            "dbt run --select tag:hudi --profiles-dir /home/airflow/.dbt --target thrift-server"
         )
     )
     end = DummyOperator(task_id='end')

@@ -93,4 +93,33 @@ sudo chmod -R ugo+rwx mnt/airflow-dbt-spark/
 ```
 dbt debug --profiles-dir /home/airflow/.dbt/
 dbt run --target=thrift-server --full-refresh
+dbt run -s dbt_model_with_hudi_setup --profiles-dir /home/airflow/.dbt/ --target=thrift-server
 hdfs dfs -rm -r -skipTrash /user/hive/dbt_output/my_first_dbt_model || true
+dbt run --select tag:hudi --target=thrift-server --profiles-dir=/home/airflow/.dbt/ --full-refresh
+```bash
+beeline -u jdbc:hive2://spark-master:10000/default
+```
+
+```sql
+CREATE DATABASE airflow_dbt;
+LOCATION 'hdfs://namenode:8020/user/airflow/dbt_output';
+USE DATABASE airflow_dbt;
+SHOW TABLES;
+DESCRIBE DATABASE EXTENDED airflow_dbt;
+
+
+SELECT * FROM metastore_db.public."DBS";
+```
+
+###### Tried but not working
+dbt-spark-livy
+apt-get install -y libkrb5-dev build-essential
+curl -X POST http://spark-master:8998/batches \
+-H "Content-Type: application/json" \
+-d '{
+      "name": "daily-etl",
+      "file": "hdfs://namenode:8020/user/spark/scripts/spark_udtf_exmple.py",
+      "conf": {
+        "spark.sql.adaptive.enabled": "true"
+      }
+    }'

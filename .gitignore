@@ -16,3 +16,6 @@ mnt/dags/airflow-selenium-torrent-scrapper.py
 mnt/dags/reconcilliation_config.json
 mnt/dags/chl_reconcilliation_report_dag.py
 mnt/dags/utils/*.py
+mnt/ssh/*
+celery/data/firefox
+logs
